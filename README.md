@@ -92,3 +92,46 @@ alert(xhr);
 ## 异步请求
 
 AJAX主要是用于处理异步请求的
+使用异步调用的时候，检测 readyState 属性,每当 readyState 属性改变时，触发readystatechange 事件。这个属性有五个值：
+
+|值 |状态| 说明|
+|:---|:---|:---|
+|0 |未初始 尚未调用 open()方法|
+|1| 启动| 已经调用 open()方法，但尚未调用 send()方法|
+|2| 发送| 已经调用 send()方法，但尚未接受响应|
+|3| 接受| 已经接受到部分响应数据|
+|4|完成| 已经接受到全部响应数据，而且可以使用|
+
+案例:
+
+```
+<script type="text/javascript">
+		// 1、得到核心对象XMLHttpRequest对象
+		var xhr = new XMLHttpRequest();
+		
+		console.log(xhr);
+		// 2、准备/打开请求  open(请求类型GET/POST,请求的路径,是否异步true/false);
+		xhr.open("GET","js/data.json?uname=zhangsan&uage=10",true); // 异步请求
+		// 3、发送请求  send(参数/null);
+		xhr.send(null);
+		
+		// 监听readystate事件 （0=尚未调用open方法；1=已调用open方法未调用send方法，2=调用send方法，未接收到响应；3=接收到部分响应；4=响应完全接收）
+		xhr.onreadystatechange = function() {
+			// 如果是异步请求，需要等待数据完全响应后再做处理
+			if (xhr.readyState == 4) {
+				// 4、解析响应数据
+				if (xhr.status == 200) { // 1、判断响应是否成功 status=200
+					// 2、得到后台响应数据  responseText
+					console.log(xhr.responseText);
+					var user = JSON.parse(xhr.responseText);
+					console.log(user);
+					console.log(user.uname);
+				} else {
+					console.log("失败状态码：" + xhr.status + "，失败原因：" + xhr.statusText);
+				}
+			}
+		}
+		
+	</script>
+```
+
