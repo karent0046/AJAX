@@ -24,3 +24,65 @@ alert(xhr);
 |responseXML |如果响应主体内容类型是"text/xml"或"application/xml"，则返回包含响应数据的XML DOM 文档|
 |status| 响应的 HTTP 状态|
 |statusText| HTTP 状态的说明|
+
+接受响应之后，第一步检查 status 属性，以确定响应已经成功返回。一般情况 HTTP 状态代码为 200 作为成功的标志。除了成功的状态代码，还有一些别的状态码：
+
+|HTTP 状态码 |状态字符串 |说明|
+|:---|:---|:---|
+|200 |OK |服务器成功返回了页面|
+|400 |Bad Request |语法错误导致服务器不识别|
+|401 |Unauthorized |请求需要用户认证|
+|404 |Not found |指定的 URL 在服务器上找不到|
+|500 |Internal Server Error |服务器遇到意外错误，无法完成请求|
+|503 |ServiceUnavailable |服务器过载或维护导致无法完成请求|
+
+## 同步请求
+
+同步请求步骤:
+同步：
+
+1、得到核心对象XMLHttpRequest对象
+
+	var xhr = new XMLHttpRequest();
+ 
+2、准备/打开请求
+
+	open(请求类型GET/POST,请求的路径,是否异步true/false);
+  
+3、发送请求
+
+	send(参数/null);
+  
+	注：如果是get请求，参数直接跟在请求路径后面，send()方法中设置null;
+  
+  ```
+  	<script type="text/javascript">
+		// 1、得到核心对象XMLHttpRequest对象
+		var xhr = new XMLHttpRequest();
+		console.log(xhr);
+		// 2、准备/打开请求  open(请求类型GET/POST,请求的路径,是否异步true/false);
+		xhr.open("GET","js/data.json?uname=zhangsan&uage=10",false); // 同步请求
+		// 3、发送请求  send(参数/null);
+		xhr.send(null);
+		// 4、解析响应数据
+		if (xhr.status == 200) { // 1、判断响应是否成功 status=200
+			// 2、得到后台响应数据  responseText
+			console.log(xhr.responseText);
+			var user = JSON.parse(xhr.responseText);
+			console.log(user);
+			console.log(user.uname);
+		} else {
+			alert("失败状态码：" + xhr.status + "，失败原因：" + xhr.statusText);
+		}
+		
+	</script>
+  ```
+  
+  
+		如果是post请求，有参数则设置参数，无参数设置为null;
+    
+4、解析响应数据
+
+	1、判断响应是否成功 status=200 （404=未找到资源;500=服务器异常;200=成功）
+      
+	2、得到后台响应数据  responseText
